@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const PasswordGenerator = () => {
     const [length,setLength] = useState(8)
@@ -11,7 +11,7 @@ const PasswordGenerator = () => {
         let pass = ''
 
         if(includeNumber) str += "1234567890"
-        if(includeSymbol) str += "!@#$%&*()_+"
+        if(includeSymbol) str += "!@#$%^&*()_+-=";
 
         for(let i=1;i<=length;i++){
             let char = str.charAt(Math.floor(Math.random()*str.length+1))
@@ -19,6 +19,10 @@ const PasswordGenerator = () => {
         }
         setPassword(pass)
     },[length,includeNumber,includeSymbol,setPassword])
+
+    useEffect(() =>{
+        PasswordGenerator()
+    },[length,includeNumber,includeSymbol,PasswordGenerator])
 
     return (
       <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
@@ -75,7 +79,10 @@ const PasswordGenerator = () => {
               <input
                 type="checkbox"
                 id="numbers"
-                defaultChecked
+                defaultChecked={includeNumber}
+                onChange={(e) => {
+                    setIncludeNumber(e.target.checked)
+                }}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               />
               <label
@@ -91,7 +98,8 @@ const PasswordGenerator = () => {
               <input
                 type="checkbox"
                 id="symbols"
-                defaultChecked
+                defaultChecked={includeSymbol}
+                onChange={(e) => setIncludeSymbol(e.target.checked)}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               />
               <label
@@ -107,7 +115,7 @@ const PasswordGenerator = () => {
           </div>
 
           {/* Generate Button */}
-          <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl">
+          <button onClick={PasswordGenerator} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl">
             Generate New Password
           </button>
         </div>
