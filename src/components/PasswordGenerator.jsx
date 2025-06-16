@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const PasswordGenerator = () => {
     const [length,setLength] = useState(8)
     const [includeNumber,setIncludeNumber] = useState(false)
     const [includeSymbol,setIncludeSymbol] = useState(false)
     const [password,setPassword] = useState("")
+    const passwordRef = useRef(null)
 
     const PasswordGenerator = useCallback(() => {
         let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -24,6 +25,12 @@ const PasswordGenerator = () => {
         PasswordGenerator()
     },[length,includeNumber,includeSymbol,PasswordGenerator])
 
+    // copy to clipboard function
+    const copyToClipboard = useCallback(() => {
+        passwordRef.current?.select() 
+        window.navigator.clipboard.writeText(password)
+    },[password])
+
     return (
       <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
         <div className="text-center mb-8">
@@ -40,9 +47,12 @@ const PasswordGenerator = () => {
               placeholder="Password"
               value={password}
               readOnly
+              ref={passwordRef}
               className="w-full px-4 py-4 pr-24 bg-gray-50 border-2 border-gray-200 rounded-xl font-mono text-lg focus:outline-none focus:border-blue-500 transition-colors"
             />
-            <button className="outline-none border-2 border-blue-500 px-3 py-1 rounded-2xl font-bold text-gray-400 hover:bg-blue-300 hover:text-black">
+            <button
+            onClick={copyToClipboard}
+            className="outline-none border-2 border-blue-500 px-3 py-1 rounded-2xl font-bold text-gray-400 hover:bg-blue-300 hover:text-black">
               copy
             </button>
           </div>
