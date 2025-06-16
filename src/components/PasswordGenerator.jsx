@@ -6,6 +6,7 @@ const PasswordGenerator = () => {
   const [includeSymbol, setIncludeSymbol] = useState(false);
   const [password, setPassword] = useState("");
   const passwordRef = useRef(null);
+  const [copied, setCopied] = useState(false);
 
   const PasswordGenerator = useCallback(() => {
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -29,6 +30,11 @@ const PasswordGenerator = () => {
   const copyToClipboard = useCallback(() => {
     passwordRef.current?.select();
     window.navigator.clipboard.writeText(password);
+
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
   }, [password]);
 
   return (
@@ -54,7 +60,7 @@ const PasswordGenerator = () => {
             onClick={copyToClipboard}
             className="outline-none border-2 border-blue-500 px-3 py-1 rounded-2xl font-bold text-gray-400 hover:bg-blue-300 hover:text-black"
           >
-            copy
+            {copied ? "copied" : "copy"}
           </button>
         </div>
 
